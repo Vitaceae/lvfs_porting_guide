@@ -1,0 +1,15 @@
+{
+    "format-version": 0,
+    "files": [
+        {
+            "bootloader_type": "usb-dongle-simple",
+            "image_version": "2.10",
+            "type": "application",
+            "board": "8272_dongle",
+            "soc": "tlsr8272",
+            "load_address": 0,
+            "size": 74612,
+            "file": "firmware.bin"
+        }
+    ]
+}

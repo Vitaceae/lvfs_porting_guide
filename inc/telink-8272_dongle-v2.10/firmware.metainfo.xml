@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="firmware">
+  <id>com.telink.tlsr8272dongle.release.firmware</id>
+  <name>TLSR8272 dongle release</name>
+  <summary>Firmware for TLSR8272 Dongle</summary>
+  <description>
+    <p>The firmware is for TLSR8272 Dongle only.</p>
+  </description>
+  <provides>
+    <firmware type="flashed">dcb27849-1baa-5fbf-8f42-433980d700b4</firmware>
+  </provides>
+  <url type="homepage">https://wiki.telink-semi.cn/wiki/index.html</url>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-proprietary</project_license>
+  <categories>
+    <category>X-Device</category>
+  </categories>
+  <custom>
+    <value key="LVFS::UpdateMessage">Device firmware update for TLSR8272 Dongle</value>
+    <value key="LVFS::VersionFormat">pair</value>
+    <value key="LVFS::UpdateProtocol">com.telink.dfu</value>
+  </custom>
+  <releases>
+    <release version="2.10" date="2024-10-22" urgency="high" tag="TLSR 2.10">
+      <checksum type="sha1" filename="payload.zip" target="content">db029f71fd2dc943794020125b64ea76a52b0c7b</checksum>
+      <checksum type="sha256" filename="payload.zip" target="content">58d9a12bd43698f9a496ced79ac80266d3dd6616045eb0f7ac8f007b21832d17</checksum>
+      <description>
+        <p>Telink firmware build against b85m SDK</p>
+      </description>
+      <url type="details">https://wiki.telink-semi.cn/wiki/chip-series/TLSR827x-Series/</url>
+      <artifacts>
+        <artifact type="source">
+          <filename>payload.zip</filename>
+          <checksum type="sha1">db029f71fd2dc943794020125b64ea76a52b0c7b</checksum>
+          <checksum type="sha256">58d9a12bd43698f9a496ced79ac80266d3dd6616045eb0f7ac8f007b21832d17</checksum>
+        </artifact>
+      </artifacts>
+    </release>
+  </releases>
+</component>
