@@ -14,30 +14,38 @@ $ cd ~/work
 #   use the forked repo which contains the staged Telink plugin
 $ git clone git@github.com:Vitaceae/fwupd.git
 $ cd fwupd
-$ git checkout telink/bluetooth-ota
+$ git checkout telink/dfu_over_usb_hid
 
-# get deps(depends on the platform)
-$ OS=ubuntu ./contrib/ci/generate_dependencies.py | xargs sudo apt install -y
+$ ./contrib/setup
 
-# setup compile options
-$ mkdir build && cd build
-# migrate to fwupd v1.9.10:
-#   DEPRECATION: Option 'docs' value 'none' is replaced by 'disabled'
-#   WARNING: Running the setup command as `meson [options]` instead of `meson setup [options]` is ambiguous and deprecated.
-$ meson setup ../ -Dsystemd_root_prefix=/tmp -Dudevdir=/tmp --prefix=$HOME/.root -Ddocs=disabled
+# 建立虚拟开发环境 virtualenv: 编译对象放在 venv/build, 安装路径在 venv/dist
+$ source venv/bin/activate
 
-# check ninja version
-$ ninja -v
+# 测试环境
+(fwupd) $ test-fwupd
+
+# 结束测试
+(fwupd) $ deactivate
 ```
 
 ## 编译安装
 
+参考源码仓库目录下 docs/building.md
+
 ```bash
-# 移动到目录 fwupd/build
-$ sudo ninja install
+# 移动到目录 fwupd
+$ TOOL_PATH=./venv/build/src
+
+# 建立虚拟开发环境 virtualenv
+$ source venv/bin/activate
+
+(fwupd) $ build-fwupd
+
 # 测试插件; 检查装置是否连接
-#$ sudo ./src/fwupdtool --plugins telink-dfu get-devices -vv
-$ sudo ./src/fwupdtool --plugins telink-dfu get-devices
+$ sudo $TOOL_PATH/fwupdtool --plugins telink-dfu get-devices -vv
+
+# 结束测试
+(fwupd) $ deactivate
 ```
 
 ## 建立固件压缩包
@@ -47,7 +55,7 @@ $ sudo ./src/fwupdtool --plugins telink-dfu get-devices
   范例: [telink-8272_dongle-v2.10](inc/telink-8272_dongle-v2.10)  
   范例: [telink-8272_dongle-v2.12](inc/telink-8272_dongle-v2.12)  
     ```text
-    telink-8272_dongle-v2.10.cab
+    xxx.cab
     ├── payload.zip
     │   ├── manifest.json
     │   └── firmware.bin
@@ -82,7 +90,8 @@ $ sudo ./src/fwupdtool --plugins telink-dfu get-devices
 
 ```bash
 $ sudo apt install gcab
-$ CAB_NAME=telink-8272_dongle-v2.10.cab
+# 依实际名称修改
+$ CAB_NAME=xxx.cab
 $ gcab -c -v $CAB_NAME firmware.metainfo.xml payload.zip
 
 # (debug) 解压 .cab 包(Windows 平台直接用 7-zip 解)
@@ -95,13 +104,18 @@ $ cabextract $CAB_NAME
 ### 从本机
 
 ```bash
-# 安装 .cab 档案
-$ CAB_PATH=~/work/telink-8272_dongle-v2.10.cab
-$ sudo ./src/fwupdtool --plugins telink-dfu install $CAB_PATH
-
-# 或安装 payload.zip(不检查metainfo)
+# 假设当前目录为 fwupd/
+$ TOOL_PATH=./venv/build/src
+# 依实际路径修改
+$ CAB_PATH=~/work/xxx.cab
+# 依实际路径修改
 $ BLOB_PATH=~/work/payload.zip
-$ sudo ./src/fwupdtool --plugins telink-dfu install-blob $CAB_PATH
+
+# 安装 .cab 档案
+$ sudo $TOOL_PATH/fwupdtool --plugins telink-dfu install $CAB_PATH -vv
+
+# 直接安装 payload.zip(不检查metainfo)
+$ sudo $TOOL_PATH/fwupdtool --plugins telink-dfu install-blob $CAB_PATH -vv
 ```
 
 ### 从 LVFS
@@ -112,7 +126,8 @@ $ sudo ./src/fwupdtool --plugins telink-dfu install-blob $CAB_PATH
 2. 修正错误; 或手动发布到 stable 通道  
    如果是 private 属性, 需要修正问题才会自动发布到 stable 区, 或者手动发布  
    ![lvfs-set-cab-to-stable](inc/lvfs-set-cab-to-stable.jpg)
-3. 安装测试  
+3. 需提交测试报告以确保固件无误: [Signed Reports](https://lvfs.readthedocs.io/en/latest/testing.html#signed-reports)
+4. 安装测试  
    ```bash
    $ sudo ./src/fwupdtool --plugins telink-dfu get-updates
    ```
