@@ -132,6 +132,40 @@ $ sudo $TOOL_PATH/fwupdtool --plugins telink-dfu install-blob $CAB_PATH -vv
    $ sudo ./src/fwupdtool --plugins telink-dfu get-updates
    ```
 
+### Offline 提交测试报告
+
++ 维持两个联线(session), 一个用于运行新版 daemon, 一个用于执行用户命令
+
+Session 1
+
+```bash
+# 假设当前目录为 fwupd/
+$ source venv/bin/activate
+$ cd venv/build
+
+$ cat ./state/pki/client.pem
+# 证书要上传到 LVFS(不同的测试机都要上传)
+$ sudo ./src/fwupd -vv
+```
+
+Session 2
+
+```bash
+# 假设当前目录为 fwupd/
+$ source venv/bin/activate
+$ vi ./venv/bin/../dist/etc/fwupd/fwupd.conf
+
+OnlyTrusted=false
+
+$ cd venv/build
+$ CAB_PATH=你的安装包路径
+$ sudo ./src/fwupdmgr install $CAB_PATH
+$ sudo ./src/fwupdmgr report-export --sign
+# 上传 *.fwupdreport 到LVFS
+```
+
+![add_client_certificate](inc/add_client_certificate.jpg)
+
 --------------------------------------------------------------------------------
 # 参考教学
 
