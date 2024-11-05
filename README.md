@@ -127,10 +127,6 @@ $ sudo $TOOL_PATH/fwupdtool --plugins telink-dfu install-blob $CAB_PATH -vv
    如果是 private 属性, 需要修正问题才会自动发布到 stable 区, 或者手动发布  
    ![lvfs-set-cab-to-stable](inc/lvfs-set-cab-to-stable.jpg)
 3. 需提交测试报告以确保固件无误: [Signed Reports](https://lvfs.readthedocs.io/en/latest/testing.html#signed-reports)
-4. 安装测试  
-   ```bash
-   $ sudo ./src/fwupdtool --plugins telink-dfu get-updates
-   ```
 
 ### Offline 提交测试报告
 
