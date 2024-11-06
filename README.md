@@ -205,7 +205,7 @@ $ sudo apt-get install policykit-1
 暂不处理
 
 提交固件仿真数据  
-![upload-emulation-data](upload-emulation-data.jpg)
+![upload-emulation-data](inc/upload-emulation-data.jpg)
 
 --------------------------------------------------------------------------------
 # 参考教学
