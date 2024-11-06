@@ -191,6 +191,11 @@ $ ./src/fwupdmgr get-devices --filter emulated
 $ ./src/fwupdmgr install $CAB_PATH --allow-reinstall
 ```
 
+提交固件仿真数据  
+![upload-emulation-data](inc/upload-emulation-data.jpg)
+
+**其他问题**
+
 >   Could not check for auth: GDBus.Error:org.freedesktop.PolicyKit1.Error.Failed: Action org.freedesktop.fwupd.emulation-save is not registered
 
 ```bash
@@ -203,9 +208,6 @@ $ sudo apt-get install policykit-1
 >   failed to write-firmware: failed to SetReport [interrupt-transfer]: no event with ID InterruptTransfer:Endpoint=0x05,Data=...
 
 暂不处理
-
-提交固件仿真数据  
-![upload-emulation-data](inc/upload-emulation-data.jpg)
 
 --------------------------------------------------------------------------------
 # 参考教学
