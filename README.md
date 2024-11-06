@@ -51,9 +51,8 @@ $ sudo $TOOL_PATH/fwupdtool --plugins telink-dfu get-devices -vv
 ## 建立固件压缩包
 
 + [LVFS: Uploading Firmware](https://lvfs.readthedocs.io/en/latest/upload.html)
-+ Telink 压缩包命名惯例: [vendor]-[device]-[version].cab  
-  范例: [telink-8272_dongle-v2.10](inc/telink-8272_dongle-v2.10)  
-  范例: [telink-8272_dongle-v2.12](inc/telink-8272_dongle-v2.12)  
++ 范例: [ryder-dongle-v1.25.cab](inc/ryder-dongle-v1.25.cab)  
+  部分档案为上传后系统自动生成  
     ```text
     xxx.cab
     ├── payload.zip
@@ -161,6 +160,52 @@ $ sudo ./src/fwupdmgr report-export --sign
 ```
 
 ![add_client_certificate](inc/add_client_certificate.jpg)
+
+### 提交仿真测试(device-emulation)报告
+
++ [device-emulation](https://github.com/fwupd/fwupd/blob/main/docs/device-emulation.md)
+
+```bash
+# 1. Tell the daemon to record a device
+# 接入装置, 从 get-device 命令查看 device ID 或 GUID, 准备录制
+$ DEV_ID="your id"
+#$ DEV_GUID="your guid"
+$ ./src/fwupdmgr emulation-tag $DEV_ID
+#$ ./src/fwupdmgr emulation-tag $DEV_GUID
+
+# remove and re-insert the device
+# 重新插拔装置, 查看信息
+$ ./src/fwupdmgr get-devices --filter emulation-tag
+
+# 2. Record data
+# 录制 OTA 更新流程
+$ CAB_PATH="你的.cab档案路径"
+$ EMU_ZIP=emulation-data.zip
+$ ./src/fwupdmgr install $CAB_PATH --allow-reinstall
+$ ./src/fwupdmgr emulation-save $EMU_ZIP
+
+# 3. Test your data
+# 移除装置, 仿真 OTA 更新流程(非必要?)
+$ ./src/fwupdmgr emulation-load $EMU_ZIP
+$ ./src/fwupdmgr get-devices --filter emulated
+$ ./src/fwupdmgr install $CAB_PATH --allow-reinstall
+```
+
+>   Could not check for auth: GDBus.Error:org.freedesktop.PolicyKit1.Error.Failed: Action org.freedesktop.fwupd.emulation-save is not registered
+
+```bash
+$ sudo apt-get install policykit-1
+# 将 org.freedesktop.fwupd.policy 复制到 /usr/share/polkit-1/actions/
+```
+
+>   (仿真 OTA 更新流程)
+>   Writing…
+>   failed to write-firmware: failed to SetReport [interrupt-transfer]: no event with ID InterruptTransfer:Endpoint=0x05,Data=...
+
+暂不处理
+
+提交固件仿真数据  
+![upload-emulation-data](upload-emulation-data.jpg)
 
 --------------------------------------------------------------------------------
 # 参考教学
